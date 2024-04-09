@@ -31,4 +31,23 @@ export const timesSchema = z.object({
   ),
 });
 
+export const stopSchema = z.object({
+  atco_code: z.string(),
+  naptan_code: z.string(),
+  common_name: z.string(),
+  long_name: z.string(),
+  // Not using these fields...
+  // "location": z.array(z.number()),
+  // "indicator": "Opp",
+  // "icon": null,
+  // "bearing": "SE",
+  // "heading": null,
+  // "stop_type": "BCT",
+  // "bus_stop_type": "MKD",
+  // "created_at": "2003-01-28T00:00:00Z",
+  // "modified_at": "2007-03-22T00:00:00Z",
+  // "active": true
+});
+
+export type Stop = z.infer<typeof stopSchema>;
 export type Times = z.infer<typeof timesSchema>;
