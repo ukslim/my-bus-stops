@@ -12,7 +12,6 @@ const BusStop = (props: BusStopProps) => {
   const [timesRsp, setTimesRsp] = useState<Times>({ times: [] });
   const [stopRsp, setStopRsp] = useState<Stop | undefined>(undefined);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: refreshTrigger is used to trigger a refresh
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,7 +19,11 @@ const BusStop = (props: BusStopProps) => {
         const data = timesSchema.parse(await response.json());
         setTimesRsp(data);
       } catch (error) {
-        console.error("Error fetching bus times data:", error);
+        console.error(
+          "Error fetching bus times data:",
+          error,
+          props.refreshTrigger,
+        );
       }
     };
 

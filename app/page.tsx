@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import BusStop from "./bus-stop";
 import { configSchema } from "./schemas";
@@ -25,10 +26,16 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold mt-4">Buses {refreshTrigger}</h1>
-      {config.map((id) => (
-        <BusStop key={id} busStopId={id} refreshTrigger={refreshTrigger} />
-      ))}
+      <h1 className="text-4xl font-bold mt-4">Buses</h1>
+      <div className="w-full">
+        {config.map((id) => (
+          <BusStop key={id} busStopId={id} refreshTrigger={refreshTrigger} />
+        ))}
+      </div>
+      <Link href="/config">
+        {/* biome-ignore lint/a11y/useValidAnchor: NextJS innit */}
+        <a className="text-blue-500">Configure Bus Stops</a>
+      </Link>
     </main>
   );
 }
