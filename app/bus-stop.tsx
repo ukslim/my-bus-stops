@@ -47,36 +47,52 @@ const BusStop = (props: BusStopProps) => {
   }, [props.busStopId]);
 
   return (
-    <div className="border p-4 bg-white">
-      <h2>{stopRsp?.long_name ?? props.busStopId}</h2>
-      <table className="border-collapse">
-        <thead>
-          <tr>
-            <th className="border text-left">To</th>
-            <th className="border text-left">Route</th>
-            <th className="border text-left">Aimed Departure</th>
-            <th className="border text-left">Expected Arrival</th>
-            <th className="border text-left">Time Until</th>
-          </tr>
-        </thead>
-        <tbody>
-          {timesRsp.times.map((time) => (
-            <tr key={time.id}>
-              <td className="border">{time.destination.name}</td>
-              <td className="border">{time.service.line_name}</td>
-              <td className="border">
-                <DateComponent date={time.aimed_departure_time} />
-              </td>
-              <td className="border">
-                <DateComponent date={time.expected_arrival_time} />
-              </td>
-              <td className="border">
-                <TimeUntil date={time.expected_arrival_time} />
-              </td>
+    <div className="border p-0 bg-white">
+      <h2 className="text-white bg-blue-500">
+        {stopRsp?.long_name ?? props.busStopId}
+      </h2>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="w-10 sm:w-20 px-1 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                To
+              </th>
+              <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Route
+              </th>
+              <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Aimed Departure
+              </th>
+              <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Expected Arrival
+              </th>
+              <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Time Until
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {timesRsp.times.map((time) => (
+              <tr key={time.id}>
+                <td className="w-10 px-1 py-1">{time.destination.name}</td>
+                <td className="px-1 py-1 whitespace-nowrap">
+                  {time.service.line_name}
+                </td>
+                <td className="px-1 py-1 whitespace-nowrap">
+                  <DateComponent date={time.aimed_departure_time} />
+                </td>
+                <td className="px-1 py-1 whitespace-nowrap">
+                  <DateComponent date={time.expected_arrival_time} />
+                </td>
+                <td className="px-1 py-1 whitespace-nowrap">
+                  <TimeUntil date={time.expected_arrival_time} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

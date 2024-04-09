@@ -25,15 +25,15 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-4xl font-bold mt-4">Buses</h1>
-      <div className="w-full">
+    <main className="min-h-screen items-center p-0 sm:p-25 sm:text-base">
+      <h1 className="text-3xl font-bold mt-1 sm:mt-4">Buses</h1>
+      <div className="w-full text-sm sm:text-base">
         {config.map((id) => (
           <BusStop key={id} busStopId={id} refreshTrigger={refreshTrigger} />
         ))}
       </div>
       <Link href="/config" className="text-blue-500">
-        Configure Bus Stops
+        Configure / Credits
       </Link>
     </main>
   );
