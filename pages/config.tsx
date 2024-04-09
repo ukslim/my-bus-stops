@@ -1,0 +1,37 @@
+"use client";
+import { useEffect, useState } from 'react';
+
+export default function Home() {
+    const [ids, setIds] = useState('');
+    const [current, setCurrent] = useState([] as string[]);
+
+    useEffect(() => {
+        const data = localStorage.getItem('config');
+        setCurrent(data ? JSON.parse(data) : []);
+    }, []);
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const idArray: string[] = ids.split(',').map(id => id.trim());
+        const asJson = JSON.stringify(idArray);
+        localStorage.setItem('config', asJson);
+        setCurrent(idArray);
+    };
+
+    return (
+        <div>
+            <h1>Configure Bus Stops</h1>
+            <p>You can find bus stop IDs on <a href="https://bustimes.org">bustimes.org</a></p>
+            <p>Enter them here, comma separated and click to save.</p>
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Enter comma-separated IDs:
+                    <input type="text" value={ids} onChange={(e) => setIds(e.target.value)} />
+                </label>
+                <input type="submit" value="Submit" />
+            </form>
+            <h3>Current configuration:</h3>
+            <pre>{current.join(', ')}</pre>
+        </div>
+    );
+}

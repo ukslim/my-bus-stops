@@ -32,9 +32,8 @@ export default function Home() {
           <BusStop key={id} busStopId={id} refreshTrigger={refreshTrigger} />
         ))}
       </div>
-      <Link href="/config">
-        {/* biome-ignore lint/a11y/useValidAnchor: NextJS innit */}
-        <a className="text-blue-500">Configure Bus Stops</a>
+      <Link href="/config" className="text-blue-500">
+        Configure Bus Stops
       </Link>
     </main>
   );
