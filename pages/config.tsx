@@ -1,4 +1,5 @@
 "use client";
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
@@ -35,6 +36,7 @@ export default function Home() {
             </form>
             <h3>Current configuration:</h3>
             <pre>{current.join(', ')}</pre>
+            <Link href="/">Back home</Link>
         </div>
     );
 }
