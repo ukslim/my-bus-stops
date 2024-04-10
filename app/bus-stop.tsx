@@ -59,7 +59,7 @@ const BusStop = (props: BusStopProps) => {
                 To
               </th>
               <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Route
+                Rt
               </th>
               <th className="px-1 py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Aimed Departure
@@ -75,7 +75,7 @@ const BusStop = (props: BusStopProps) => {
           <tbody className="bg-white divide-y divide-gray-200">
             {timesRsp.times.map((time) => (
               <tr key={time.id}>
-                <td className="w-10 px-1 py-1">{time.destination.name}</td>
+                <td className="max-w-24 w-24 px-1 py-1 overflow-scroll whitespace-nowrap">{time.destination.name}</td>
                 <td className="px-1 py-1 whitespace-nowrap">
                   {time.service.line_name}
                 </td>
