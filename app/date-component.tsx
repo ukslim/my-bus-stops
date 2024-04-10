@@ -9,7 +9,7 @@ const DateComponent: React.FC<DateProps> = ({ date }) => {
     return "-";
   }
   const formattedDate = date.toLocaleTimeString([], {
-    hour12: true,
+    hour12: false,
     hour: "2-digit",
     minute: "2-digit",
   });
