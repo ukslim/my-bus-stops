@@ -78,7 +78,9 @@ const BusStop = (props: BusStopProps) => {
                 <td className="px-1 py-1 whitespace-nowrap">
                   {time.service.line_name}
                 </td>
-                <td className="max-w-24 w-24 px-1 py-1 overflow-scroll no-scrollbar whitespace-nowrap">{time.destination.name}</td>
+                <td className="max-w-24 w-24 px-1 py-1 overflow-scroll no-scrollbar whitespace-nowrap">
+                  {time.destination.name}
+                </td>
                 <td className="px-1 py-1 whitespace-nowrap">
                   <DateComponent date={time.aimed_departure_time} />
                 </td>
