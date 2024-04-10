@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+// Purely a proxy for CORS reasons
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
