@@ -1,54 +1,36 @@
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import DateComponent from "./date-component";
-import { type Stop, type Times, stopSchema, timesSchema } from "./schemas";
+import { stopSchema, timesSchema } from "./schemas";
 import TimeUntil from "./time-until";
 
 interface BusStopProps {
   busStopId: string;
   refreshTrigger: number;
 }
+const fetchStop = (url: string) =>
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => stopSchema.parse(data));
+
+const fetchTimes = (url: string) =>
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => timesSchema.parse(data));
 
 const BusStop = (props: BusStopProps) => {
-  const [timesRsp, setTimesRsp] = useState<Times>({ times: [] });
-  const [stopRsp, setStopRsp] = useState<Stop | undefined>(undefined);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`api/times/?id=${props.busStopId}`);
-        const data = timesSchema.parse(await response.json());
-        setTimesRsp(data);
-      } catch (error) {
-        console.error(
-          "Error fetching bus times data:",
-          error,
-          props.refreshTrigger,
-        );
-      }
-    };
-
-    fetchData();
-  }, [props.busStopId, props.refreshTrigger]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `api/stop-instance/?id=${props.busStopId}`,
-        );
-        const data = stopSchema.parse(await response.json());
-        setStopRsp(data);
-      } catch (error) {
-        console.error("Error fetching bus stop data:", error);
-      }
-    };
-
-    fetchData();
-  }, [props.busStopId]);
+  const { data: stopRsp, error: stopError } = useSWR(
+    `api/stop-instance/?id=${props.busStopId}`,
+    fetchStop,
+  );
+  const { data: timesRsp, error: timesError } = useSWR(
+    `api/times/?id=${props.busStopId}`,
+    fetchTimes,
+  );
 
   return (
     <div className="border p-0 bg-white">
       <h2 className="text-white bg-blue-500">
+        {stopError ? `Error naming stop ${props.busStopId}` : ""}
         {stopRsp?.long_name ?? props.busStopId}
       </h2>
       <div className="overflow-x-auto">
@@ -73,25 +55,38 @@ const BusStop = (props: BusStopProps) => {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {timesRsp.times.map((time) => (
-              <tr key={time.id}>
-                <td className="px-1 py-1 whitespace-nowrap">
-                  {time.service.line_name}
-                </td>
-                <td className="max-w-24 w-24 px-1 py-1 overflow-scroll no-scrollbar whitespace-nowrap">
-                  {time.destination.name}
-                </td>
-                <td className="px-1 py-1 whitespace-nowrap">
-                  <DateComponent date={time.aimed_departure_time} />
-                </td>
-                <td className="px-1 py-1 whitespace-nowrap">
-                  <DateComponent date={time.expected_arrival_time} />
-                </td>
-                <td className="px-1 py-1 whitespace-nowrap">
-                  <TimeUntil date={time.expected_arrival_time} />
-                </td>
+            {timesError ? (
+              <tr>
+                <td colSpan={5}>Error getting times</td>
               </tr>
-            ))}
+            ) : (
+              ""
+            )}
+            {timesRsp ? (
+              timesRsp?.times?.map((time) => (
+                <tr key={time.id}>
+                  <td className="px-1 py-1 whitespace-nowrap">
+                    {time.service.line_name}
+                  </td>
+                  <td className="max-w-24 w-24 px-1 py-1 overflow-scroll no-scrollbar whitespace-nowrap">
+                    {time.destination.name}
+                  </td>
+                  <td className="px-1 py-1 whitespace-nowrap">
+                    <DateComponent date={time.aimed_departure_time} />
+                  </td>
+                  <td className="px-1 py-1 whitespace-nowrap">
+                    <DateComponent date={time.expected_arrival_time} />
+                  </td>
+                  <td className="px-1 py-1 whitespace-nowrap">
+                    <TimeUntil date={time.expected_arrival_time} />
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5}>Loading</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
