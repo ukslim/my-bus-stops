@@ -5,7 +5,6 @@ import TimeUntil from "./time-until";
 
 interface BusStopProps {
   busStopId: string;
-  refreshTrigger: number;
 }
 const fetchStop = (url: string) =>
   fetch(url)
@@ -25,6 +24,9 @@ const BusStop = (props: BusStopProps) => {
   const { data: timesRsp, error: timesError } = useSWR(
     `api/times/?id=${props.busStopId}`,
     fetchTimes,
+    {
+      refreshInterval: 60_000,
+    }
   );
 
   return (
