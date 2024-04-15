@@ -18,15 +18,15 @@ const fetchTimes = (url: string) =>
 
 const BusStop = (props: BusStopProps) => {
   const { data: stopRsp, error: stopError } = useSWR(
-    `api/stop-instance/?id=${props.busStopId}`,
+    `/api/stop-instance/?id=${props.busStopId}`,
     fetchStop,
   );
   const { data: timesRsp, error: timesError } = useSWR(
-    `api/times/?id=${props.busStopId}`,
+    `/api/times/?id=${props.busStopId}`,
     fetchTimes,
     {
       refreshInterval: 60_000,
-    }
+    },
   );
 
   return (
