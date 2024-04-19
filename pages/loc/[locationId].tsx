@@ -4,6 +4,7 @@ import { configSchema, querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { useSwipeable } from "react-swipeable";
 
 const LocationPage = () => {
   const router = useRouter();
@@ -17,14 +18,29 @@ const LocationPage = () => {
     setConfig(loadConfig(locationId ?? "config"));
   }, [locationId]);
 
+  const currentIndex = ids.indexOf(locationId ?? "home");
+  const nextIndex = (currentIndex + 1) % ids.length;
+  const prevIndex = (currentIndex - 1 + ids.length) % ids.length;
+
+  const handlers = useSwipeable({
+    onSwipedLeft: () => {
+      router.push(`/loc/${ids[prevIndex]}`);
+    },
+    onSwipedRight: () => {
+      router.push(`/loc/${ids[nextIndex]}`);
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
+
   return (
-    <main className="min-h-screen items-center p-0 sm:p-25 sm:text-base">
+    <main
+      {...handlers}
+      className="min-h-screen items-center p-0 sm:p-25 sm:text-base"
+    >
       <ul className="flex space-x-4 bg-blue-500 text-white p-4">
         {ids.map((id) => (
-          <li
-            key={id}
-            className={id === locationId ? "underline" : ""}
-          >
+          <li key={id} className={id === locationId ? "underline" : ""}>
             <Link href={`/loc/${id}`} className="hover:underline">
               {id}
             </Link>
