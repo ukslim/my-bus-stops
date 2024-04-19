@@ -1,9 +1,11 @@
 "use client";
+import { NewLocation } from "@/components/new-location";
 import { listConfigs, loadConfig, saveConfig } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { set } from "zod";
 
 export default function Config() {
   const router = useRouter();
@@ -18,7 +20,8 @@ export default function Config() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const idArray: string[] = ids.split(",").map((id) => id.trim());
+    const idArray: string[] = ids.split("\n").map((id) => id.trim());
+    console.log("Saving", idArray)
     saveConfig(locationId ?? "config", idArray);
     setCurrent(idArray);
   };
@@ -58,22 +61,25 @@ export default function Config() {
       </p>
       <form onSubmit={handleSubmit} className="mb-4">
         <label className="block mb-2">
-          Enter comma-separated IDs:
-          <input
-            type="text-area"
-            value={ids}
+          Enter IDs, one per line:
+          <textarea
+            defaultValue={current.join("\n")}
             onChange={(e) => setIds(e.target.value)}
             className="mt-1 p-2 border rounded-md w-full"
+            rows={4}
           />
         </label>
         <input
           type="submit"
-          value="Submit"
+          value="Update"
           className="p-2 bg-blue-500 text-white rounded-md cursor-pointer"
         />
       </form>
-      <h3 className="text-xl font-semibold mb-2">Current configuration:</h3>
-      <pre className="mb-4 whitespace-pre-wrap">{current.join(", ")}</pre>
+      <h1 className="text-2xl font-bold mb-4">
+        Add new location
+      </h1>
+      <NewLocation />
+
       <Link href={`/loc/${locationId}`} className="text-blue-500 underline">
         Back to {locationId}
       </Link>
