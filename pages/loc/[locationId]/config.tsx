@@ -76,8 +76,9 @@ export default function Config() {
         />
       </form>
       <h1 className="text-2xl font-bold mb-4">Add new location</h1>
-      <NewLocation />
-      <h1 className="text-2xl font-bold mb-4">Back to {locationId}</h1>
+      <div className="mb-4">
+        <NewLocation />
+      </div>
       <Link
         href={`/loc/${locationId}`}
         className="inline-block px-6 py-2 text-xs font-medium leading-6 text-center text-white uppercase transition bg-blue-500 rounded shadow ripple hover:shadow-lg hover:bg-blue-600 focus:outline-none"
