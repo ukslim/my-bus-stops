@@ -1,6 +1,6 @@
 import useSWR from "swr";
 import DateComponent from "./date-component";
-import { stopSchema, timesSchema } from "../app/schemas";
+import { stopSchema, timesSchema } from "../utils/schemas";
 import TimeUntil from "./time-until";
 
 interface BusStopProps {

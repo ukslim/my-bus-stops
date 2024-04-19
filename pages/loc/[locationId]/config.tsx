@@ -1,6 +1,6 @@
 "use client";
-import { listConfigs, loadConfig, saveConfig } from "@/app/config";
-import { querySchema } from "@/app/schemas";
+import { listConfigs, loadConfig, saveConfig } from "@/utils/config";
+import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -19,7 +19,6 @@ export default function Config() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const idArray: string[] = ids.split(",").map((id) => id.trim());
-    const asJson = JSON.stringify(idArray);
     saveConfig(locationId ?? "config", idArray);
     setCurrent(idArray);
   };

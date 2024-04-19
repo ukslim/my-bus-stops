@@ -1,6 +1,6 @@
 import BusStops from "@/components/bus-stops";
-import { listConfigs, loadConfig } from "@/app/config";
-import { configSchema, querySchema } from "@/app/schemas";
+import { listConfigs, loadConfig } from "@/utils/config";
+import { configSchema, querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";

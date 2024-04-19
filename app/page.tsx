@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { migrateOldConfig } from "./config";
+import { migrateOldConfig } from "../utils/config";
 
 export default function Home() {
   const router = useRouter();
