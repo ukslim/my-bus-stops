@@ -41,7 +41,7 @@ const LocationPage = () => {
       <ul className="flex space-x-4 bg-blue-500 text-white p-4">
         {ids.map((id) => (
           <li key={id} className={id === locationId ? "underline" : ""}>
-            <Link href={`/loc/${id}`} className="hover:underline">
+            <Link href={`/loc/${id}`} className="">
               {id}
             </Link>
           </li>
