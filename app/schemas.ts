@@ -1,6 +1,11 @@
 import { z } from "zod";
 
 export const configSchema = z.array(z.string());
+
+export const querySchema = z.object({
+  locationId: z.string().optional(),
+});
+
 export const timesSchema = z.object({
   // Unused fields are commented
   times: z.array(
@@ -52,3 +57,4 @@ export const stopSchema = z.object({
 
 export type Stop = z.infer<typeof stopSchema>;
 export type Times = z.infer<typeof timesSchema>;
+export type Query = z.infer<typeof querySchema>;
