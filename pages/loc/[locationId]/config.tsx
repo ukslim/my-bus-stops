@@ -47,7 +47,8 @@ const Config: React.FC = () => {
         .
       </p>
       <p className="mb-4">
-        Version: {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA}
+        Version:{" "}
+        {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.substring(0, 7)}
       </p>
       <h1 className="text-2xl font-bold mb-4">
         Configure Stops ({locationId})
