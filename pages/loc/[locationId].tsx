@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 
-const LocationPage = () => {
+const LocationPage: React.FC = () => {
   const router = useRouter();
   const query = querySchema.parse(router.query);
   const { locationId } = query;

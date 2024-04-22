@@ -4,7 +4,7 @@ type BusStopProps = {
   config: string[];
 };
 
-export default function BusStops(props: BusStopProps) {
+const BusStops: React.FC<BusStopProps> = (props) => {
   const { config } = props;
   if (!config || config.length === 0) {
     return <div>No bus stops configured</div>;
@@ -16,4 +16,6 @@ export default function BusStops(props: BusStopProps) {
       ))}
     </div>
   );
-}
+};
+
+export default BusStops;

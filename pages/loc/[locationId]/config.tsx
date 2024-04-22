@@ -1,13 +1,13 @@
 "use client";
 import { NewLocation } from "@/components/new-location";
-import { listConfigs, loadConfig, saveConfig } from "@/utils/config";
+import { loadConfig, saveConfig } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { set } from "zod";
 
-export default function Config() {
+const Config: React.FC = () => {
   const router = useRouter();
   const query = querySchema.parse(router.query);
   const { locationId } = query;
@@ -21,7 +21,6 @@ export default function Config() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const idArray: string[] = ids.split("\n").map((id) => id.trim());
-    console.log("Saving", idArray);
     saveConfig(locationId ?? "config", idArray);
     setCurrent(idArray);
   };
@@ -87,4 +86,6 @@ export default function Config() {
       </Link>
     </div>
   );
-}
+};
+
+export default Config;

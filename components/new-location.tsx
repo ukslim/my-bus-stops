@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
 
-export const NewLocation = () => {
+export const NewLocation: React.FC = () => {
   const router = useRouter();
   const [inputValue, setInputValue] = useState("");
 
