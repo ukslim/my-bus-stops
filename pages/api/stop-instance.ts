@@ -11,7 +11,7 @@ export default async function handler(
     const response = await fetch(`https://bustimes.org/api/stops/${id}/`);
     const data = await response.json();
     res.status(200).json(data);
-  } catch (error) {
+  } catch (_error) {
     res.status(500).json({ error: "Error fetching bus times" });
   }
 }

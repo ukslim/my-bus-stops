@@ -4,8 +4,8 @@ import { loadConfig, saveConfig } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type React from "react";
 import { useEffect, useState } from "react";
-import { set } from "zod";
 
 const Config: React.FC = () => {
   const router = useRouter();

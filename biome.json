@@ -6,11 +6,18 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "all": true,
+      "style": {
+        "noDefaultExport": "off",
+        "useFilenamingConvention": "off"
+      }
     }
   },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2
+  },
+  "files": {
+    "ignore": ["node_modules", ".next", ".history"]
   }
 }

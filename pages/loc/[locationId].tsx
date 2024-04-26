@@ -1,8 +1,9 @@
 import BusStops from "@/components/bus-stops";
 import { listConfigs, loadConfig } from "@/utils/config";
-import { configSchema, querySchema } from "@/utils/schemas";
+import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import type React from "react";
 import { useEffect, useState } from "react";
 import { useSwipeable } from "react-swipeable";
 

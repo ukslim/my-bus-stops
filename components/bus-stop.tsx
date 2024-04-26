@@ -1,4 +1,5 @@
-import useSWR from "swr";
+import type React from "react";
+import useSwr from "swr";
 import { stopSchema, timesSchema } from "../utils/schemas";
 import DateComponent from "./date-component";
 import TimeUntil from "./time-until";
@@ -17,11 +18,11 @@ const fetchTimes = (url: string) =>
     .then((data) => timesSchema.parse(data));
 
 const BusStop: React.FC<BusStopProps> = (props) => {
-  const { data: stopRsp, error: stopError } = useSWR(
+  const { data: stopRsp, error: stopError } = useSwr(
     `/api/stop-instance/?id=${props.busStopId}`,
     fetchStop,
   );
-  const { data: timesRsp, error: timesError } = useSWR(
+  const { data: timesRsp, error: timesError } = useSwr(
     `/api/times/?id=${props.busStopId}`,
     fetchTimes,
     {

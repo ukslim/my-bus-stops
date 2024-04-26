@@ -1,3 +1,4 @@
+import type React from "react";
 import BusStop from "./bus-stop";
 
 type BusStopProps = {

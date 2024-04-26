@@ -13,6 +13,7 @@ export const timesSchema = z.object({
       id: z.number(),
       //   trip_id: z.number(),
       service: z.object({
+        // biome-ignore lint/style/useNamingConvention: external API
         line_name: z.string(),
         // operators: z.array(
         //   z.object({
@@ -28,10 +29,14 @@ export const timesSchema = z.object({
         name: z.string(),
         // locality: z.string(),
       }),
+      // biome-ignore lint/style/useNamingConvention: <explanation>
       aimed_arrival_time: z.coerce.date().optional(),
+      // biome-ignore lint/style/useNamingConvention: <explanation>
       aimed_departure_time: z.coerce.date().optional(),
       //   delay: z.string().optional(),
+      // biome-ignore lint/style/useNamingConvention: <explanation>
       expected_departure_time: z.coerce.date().optional(),
+      // biome-ignore lint/style/useNamingConvention: <explanation>
       expected_arrival_time: z.coerce.date().optional(),
     }),
   ),
@@ -41,7 +46,9 @@ export const stopSchema = z.object({
   // Unused fields are commented
   //   atco_code: z.string(),
   //   naptan_code: z.string(),
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   common_name: z.string(),
+  // biome-ignore lint/style/useNamingConvention: <explanation>
   long_name: z.string(),
   // "location": z.array(z.number()),
   // "indicator": "Opp",
