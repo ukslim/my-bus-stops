@@ -21,6 +21,16 @@ export function loadConfig(locationId: string): string[] {
   return data ? JSON.parse(data) : [];
 }
 
+export function saveRoutes(locationId: string, routes: string[]): void {
+  const asJson = JSON.stringify(routes);
+  localStorage.setItem(`routes_${locationId}`, asJson);
+}
+
+export function loadRoutes(locationId: string): string[] {
+  const data = localStorage.getItem(`routes_${locationId}`);
+  return data ? JSON.parse(data) : [];
+}
+
 export function migrateOldConfig(): void {
   const data = localStorage.getItem("config");
   if (!data) {

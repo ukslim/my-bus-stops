@@ -1,5 +1,5 @@
 import BusStops from "@/components/bus-stops";
-import { listConfigs, loadConfig } from "@/utils/config";
+import { listConfigs, loadConfig, loadRoutes } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -13,10 +13,13 @@ const LocationPage: React.FC = () => {
   const { locationId } = query;
   const [config, setConfig] = useState<string[]>([]);
   const [ids, setIds] = useState<string[]>([]);
+  const [isFiltered, setIsFiltered] = useState(true);
+  const [routes, setRoutes] = useState<string[]>([]);
 
   useEffect(() => {
     setIds(listConfigs());
     setConfig(loadConfig(locationId ?? "config"));
+    setRoutes(loadRoutes(locationId ?? "config"));
   }, [locationId]);
 
   const currentIndex = ids.indexOf(locationId ?? "home");
@@ -48,10 +51,21 @@ const LocationPage: React.FC = () => {
           </li>
         ))}
       </ul>
-      <BusStops config={config} />
-      <Link href={`${locationId}/config`} className="text-blue-500">
-        Configure / Credits
-      </Link>
+      <BusStops config={config} isFiltered={isFiltered} routes={routes} />
+      <div className="flex items-center space-x-4 p-4">
+        <label className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={isFiltered}
+            onChange={(e) => setIsFiltered(e.target.checked)}
+            className="form-checkbox h-4 w-4 text-blue-500"
+          />
+          <span>Filter Routes</span>
+        </label>
+        <Link href={`${locationId}/config`} className="text-blue-500">
+          Configure / Credits
+        </Link>
+      </div>
     </main>
   );
 };
