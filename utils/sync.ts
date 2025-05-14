@@ -1,14 +1,7 @@
-import { createClient } from '@vercel/kv';
 import { nanoid } from 'nanoid';
 
 // Cookie name for storing the sync ID
 const SYNC_ID_COOKIE = 'bus_stops_sync_id';
-
-// Initialize KV client with public environment variables
-const kv = createClient({
-  url: process.env.NEXT_PUBLIC_KV_REST_API_URL!,
-  token: process.env.NEXT_PUBLIC_KV_REST_API_TOKEN!,
-});
 
 // Generate a new random sync ID
 export function generateSyncId(): string {
@@ -42,15 +35,35 @@ export async function saveToCloud(syncId: string): Promise<void> {
       configsToSave[key] = configs.getItem(key) ?? '';
     }
   }
-  
-  // Set expiration to 1 year (in seconds)
-  const oneYearInSeconds = 31536000;
-  await kv.set(syncId, configsToSave, { ex: oneYearInSeconds });
+
+  const response = await fetch('/api/kv', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      syncId,
+      data: configsToSave,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to save to cloud');
+  }
 }
 
 // Load all configs from cloud
 export async function loadFromCloud(syncId: string): Promise<void> {
-  const configs = await kv.get<Record<string, string>>(syncId);
+  const response = await fetch(`/api/kv?syncId=${encodeURIComponent(syncId)}`);
+  
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error('Sync ID not found');
+    }
+    throw new Error('Failed to load from cloud');
+  }
+
+  const { data: configs } = await response.json() as { data: Record<string, string> };
   if (!configs) return;
   
   // Clear existing stops configs
@@ -68,6 +81,8 @@ export async function loadFromCloud(syncId: string): Promise<void> {
 
 // Check if a sync ID exists in Redis
 export async function checkSyncId(syncId: string): Promise<boolean> {
-  const exists = await kv.exists(syncId);
-  return exists === 1;
+  const response = await fetch(`/api/kv?syncId=${encodeURIComponent(syncId)}`, {
+    method: 'HEAD',
+  });
+  return response.ok;
 } 
