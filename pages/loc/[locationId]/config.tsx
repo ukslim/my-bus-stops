@@ -150,6 +150,7 @@ const Config: React.FC = () => {
       </Link>
       <div className="mb-8 mt-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Sync Settings</h2>
+        <p className="mb-4">Save your configuration to a cloud service to use on other devices. Your saved settings will expire in 1 day, but will stay in your browser forever.</p>
         {!syncId ? (
           <div className="mb-4">
             <p className="mb-2">No sync ID set. Generate one or enter an existing ID:</p>
