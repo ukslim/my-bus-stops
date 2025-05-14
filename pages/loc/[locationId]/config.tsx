@@ -1,6 +1,6 @@
 "use client";
 import { NewLocation } from "@/components/new-location";
-import { loadConfig, saveConfig } from "@/utils/config";
+import { loadConfig, loadRoutes, saveConfig, saveRoutes } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import { checkSyncId, generateSyncId, getSyncId, loadFromCloud, saveToCloud, setSyncId } from "@/utils/sync";
 import Link from "next/link";
@@ -14,6 +14,8 @@ const Config: React.FC = () => {
   const { locationId } = query;
   const [ids, setIds] = useState("");
   const [current, setCurrent] = useState([] as string[]);
+  const [routes, setRoutes] = useState("");
+  const [currentRoutes, setCurrentRoutes] = useState([] as string[]);
   const [syncId, setSyncIdState] = useState<string | null>(null);
   const [syncError, setSyncError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +23,7 @@ const Config: React.FC = () => {
 
   useEffect(() => {
     setCurrent(loadConfig(locationId ?? "config"));
+    setCurrentRoutes(loadRoutes(locationId ?? "config"));
     setSyncIdState(getSyncId());
   }, [locationId]);
 
@@ -29,6 +32,13 @@ const Config: React.FC = () => {
     const idArray: string[] = ids.split("\n").map((id) => id.trim());
     saveConfig(locationId ?? "config", idArray);
     setCurrent(idArray);
+  };
+
+  const handleRoutesSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const routeArray: string[] = routes.split("\n").map((route) => route.trim()).filter(Boolean);
+    saveRoutes(locationId ?? "config", routeArray);
+    setCurrentRoutes(routeArray);
   };
 
   const handleSyncIdSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -138,6 +148,28 @@ const Config: React.FC = () => {
           className="p-2 bg-blue-500 text-white rounded-md cursor-pointer"
         />
       </form>
+
+      <h1 className="text-2xl font-bold mb-4">Configure Routes of Interest</h1>
+      <p className="mb-4">
+        Enter the route numbers you&apos;re interested in, one per line. Leave empty to show all routes.
+      </p>
+      <form onSubmit={handleRoutesSubmit} className="mb-4">
+        <label className="block mb-2">
+          Enter routes, one per line:
+          <textarea
+            defaultValue={currentRoutes.join("\n")}
+            onChange={(e) => setRoutes(e.target.value)}
+            className="mt-1 p-2 border rounded-md w-full"
+            rows={4}
+          />
+        </label>
+        <input
+          type="submit"
+          value="Update Routes"
+          className="p-2 bg-blue-500 text-white rounded-md cursor-pointer"
+        />
+      </form>
+
       <h1 className="text-2xl font-bold mb-4">Add new location</h1>
       <div className="mb-4">
         <NewLocation />

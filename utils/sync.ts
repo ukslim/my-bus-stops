@@ -31,7 +31,7 @@ export async function saveToCloud(syncId: string): Promise<void> {
   // Only save stops_* configs
   for (let i = 0; i < configs.length; i++) {
     const key = configs.key(i);
-    if (key?.startsWith('stops_')) {
+    if (key?.startsWith('stops_') || key?.startsWith('routes_')) {
       configsToSave[key] = configs.getItem(key) ?? '';
     }
   }
@@ -68,7 +68,7 @@ export async function loadFromCloud(syncId: string): Promise<void> {
   
   // Clear existing stops configs
   Object.keys(localStorage).forEach(key => {
-    if (key.startsWith('stops_')) {
+    if (key.startsWith('stops_') || key.startsWith('routes_')) {
       localStorage.removeItem(key);
     }
   });

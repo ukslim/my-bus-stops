@@ -9,7 +9,9 @@ export default async function handler(
 
   try {
     const response = await fetch(
-      `https://bustimes.org/stops/${id}/times.json?limit=3`,
+      // We want to usually get 3 after filtering. I feel as if you could usually expect 3
+      // out of the next 20 buses at a stop to be one of your routes.
+      `https://bustimes.org/stops/${id}/times.json?limit=20`,
     );
     const data = await response.json();
     res.status(200).json(data);

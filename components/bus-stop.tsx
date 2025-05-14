@@ -6,7 +6,10 @@ import TimeUntil from "./time-until";
 
 interface BusStopProps {
   busStopId: string;
+  isFiltered: boolean;
+  routes: string[];
 }
+
 const fetchStop = (url: string) =>
   fetch(url)
     .then((response) => response.json())
@@ -18,23 +21,29 @@ const fetchTimes = (url: string) =>
     .then((data) => timesSchema.parse(data));
 
 const BusStop: React.FC<BusStopProps> = (props) => {
+  const { busStopId, isFiltered, routes } = props;
   const { data: stopRsp, error: stopError } = useSwr(
-    `/api/stop-instance/?id=${props.busStopId}`,
+    `/api/stop-instance/?id=${busStopId}`,
     fetchStop,
   );
   const { data: timesRsp, error: timesError } = useSwr(
-    `/api/times/?id=${props.busStopId}`,
+    `/api/times/?id=${busStopId}`,
     fetchTimes,
     {
       refreshInterval: 60_000,
     },
   );
 
+  const filteredTimes = timesRsp?.times?.filter((time) => {
+    if (!isFiltered || routes.length === 0) return true;
+    return routes.includes(time.service.line_name);
+  }).slice(0, 3);
+
   return (
     <div className="border p-0 bg-white">
       <h2 className="text-white bg-blue-500">
-        {stopError ? `Error naming stop ${props.busStopId}` : ""}
-        {stopRsp?.long_name ?? props.busStopId}
+        {stopError ? `Error naming stop ${busStopId}` : ""}
+        {stopRsp?.long_name ?? busStopId}
       </h2>
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
@@ -66,7 +75,7 @@ const BusStop: React.FC<BusStopProps> = (props) => {
               ""
             )}
             {timesRsp ? (
-              timesRsp?.times?.map((time) => (
+              filteredTimes?.map((time) => (
                 <tr key={time.id}>
                   <td className="px-1 py-1 whitespace-nowrap">
                     {time.service.line_name}
