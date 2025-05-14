@@ -2,6 +2,7 @@
 import { NewLocation } from "@/components/new-location";
 import { loadConfig, saveConfig } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
+import { checkSyncId, generateSyncId, getSyncId, loadFromCloud, saveToCloud, setSyncId } from "@/utils/sync";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import type React from "react";
@@ -13,9 +14,14 @@ const Config: React.FC = () => {
   const { locationId } = query;
   const [ids, setIds] = useState("");
   const [current, setCurrent] = useState([] as string[]);
+  const [syncId, setSyncIdState] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [syncSuccess, setSyncSuccess] = useState<string>("");
 
   useEffect(() => {
     setCurrent(loadConfig(locationId ?? "config"));
+    setSyncIdState(getSyncId());
   }, [locationId]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -23,6 +29,60 @@ const Config: React.FC = () => {
     const idArray: string[] = ids.split("\n").map((id) => id.trim());
     saveConfig(locationId ?? "config", idArray);
     setCurrent(idArray);
+  };
+
+  const handleSyncIdSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setSyncError("");
+    setSyncSuccess("");
+    
+    const form = event.currentTarget;
+    const input = form.elements.namedItem('syncId') as HTMLInputElement;
+    const newSyncId = input.value.trim();
+    
+    try {
+      // First check if the sync ID exists
+      const exists = await checkSyncId(newSyncId);
+      if (!exists) {
+        setSyncError("This sync ID doesn't exist. Please check and try again.");
+        return;
+      }
+
+      await loadFromCloud(newSyncId);
+      setSyncId(newSyncId);
+      setSyncIdState(newSyncId);
+      setSyncSuccess("Successfully loaded configuration from cloud!");
+      router.reload();
+    } catch (error) {
+      setSyncError("Failed to load configuration. Please check your sync ID.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSaveToCloud = async () => {
+    if (!syncId) return;
+    setIsLoading(true);
+    setSyncError("");
+    setSyncSuccess("");
+    
+    try {
+      await saveToCloud(syncId);
+      setSyncSuccess("Successfully saved configuration to cloud!");
+    } catch (error) {
+      console.error(error);
+      setSyncError("Failed to save configuration to cloud.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGenerateNewId = () => {
+    const newId = generateSyncId();
+    setSyncId(newId);
+    setSyncIdState(newId);
+    setSyncSuccess("New sync ID generated! Make sure to save your changes to cloud.");
   };
 
   return (
@@ -88,6 +148,62 @@ const Config: React.FC = () => {
       >
         Back to {locationId}
       </Link>
+      <div className="mb-8 mt-8 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Sync Settings</h2>
+        {!syncId ? (
+          <div className="mb-4">
+            <p className="mb-2">No sync ID set. Generate one or enter an existing ID:</p>
+            <button
+              onClick={handleGenerateNewId}
+              className="bg-blue-500 text-white px-4 py-2 rounded mr-2 hover:bg-blue-600 transition-colors"
+            >
+              Generate New ID
+            </button>
+          </div>
+        ) : (
+          <div className="mb-4">
+            <p className="mb-2">Your sync ID: <code className="bg-gray-100 px-2 py-1 rounded select-all">{syncId}</code></p>
+            <p className="text-sm text-gray-600 mb-4">Save this ID to use on other devices</p>
+            <button
+              onClick={handleSaveToCloud}
+              disabled={isLoading}
+              className="bg-green-500 text-white px-4 py-2 rounded mr-2 hover:bg-green-600 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? 'Saving...' : 'Save to Cloud'}
+            </button>
+          </div>
+        )}
+        
+        <form onSubmit={handleSyncIdSubmit} className="mt-4">
+          <div className="flex items-center">
+            <input
+              type="text"
+              name="syncId"
+              placeholder="Enter sync ID"
+              className="border p-2 rounded mr-2 flex-grow"
+            />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? 'Loading...' : 'Load from Cloud'}
+            </button>
+          </div>
+        </form>
+        
+        {syncError && (
+          <p className="text-red-500 mt-2">{syncError}</p>
+        )}
+        
+        {syncSuccess && (
+          <p className="text-green-500 mt-2">{syncSuccess}</p>
+        )}
+        
+        <p className="mt-4 text-sm text-gray-600">
+          Warning: Loading from cloud will replace all your local configurations
+        </p>
+      </div>
     </div>
   );
 };
