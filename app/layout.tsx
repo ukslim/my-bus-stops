@@ -10,6 +10,18 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "My Bus Stops",
   description: "Minimalist bus stop times",
+  manifest: "/manifest.json",
+  themeColor: "#ffffff",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "My Bus Stops",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
 };
 
 export default function RootLayout({
@@ -19,6 +31,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/ios/180.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/ios/152.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/ios/120.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/ios/76.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/ios/32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/ios/16.png" />
+      </head>
       <body className={inter.className}>
         {children}
         <SpeedInsights />
