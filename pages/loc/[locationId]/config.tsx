@@ -128,7 +128,7 @@ const Config: React.FC = () => {
         {process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.substring(0, 7)}
       </p>
       <h1 className="text-2xl font-bold mb-4">
-        Configure Stops ({locationId})
+        Configure Stops (&quot;{locationId}&quot;)
       </h1>
       <p className="mb-4">
         You can find bus stop IDs on{" "}
@@ -156,7 +156,7 @@ const Config: React.FC = () => {
         />
       </form>
 
-      <h1 className="text-2xl font-bold mb-4">Configure Routes of Interest</h1>
+      <h1 className="text-2xl font-bold mb-4">Configure Routes of Interest (&quot;{locationId}&quot;)</h1>
       <p className="mb-4">
         Enter the route numbers you&apos;re interested in, one per line. Leave empty to show all routes.
       </p>
@@ -188,7 +188,7 @@ const Config: React.FC = () => {
         Back to {locationId}
       </Link>
       <div className="mb-8 mt-8 p-4 bg-white rounded-lg shadow">
-        <h2 className="text-xl font-bold mb-4">Delete Location</h2>
+        <h2 className="text-xl font-bold mb-4">Delete Location (&quot;{locationId}&quot;)</h2>
         <p className="mb-4 text-gray-600">
           Warning: This will permanently delete this location&apos;s configuration. This action cannot be undone.
         </p>
