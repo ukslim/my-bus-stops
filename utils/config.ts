@@ -45,3 +45,8 @@ export function migrateOldConfig(): void {
     console.error("Failed to migrate old config", e);
   }
 }
+
+export function deleteLocation(locationId: string): void {
+  localStorage.removeItem(`stops_${locationId}`);
+  localStorage.removeItem(`routes_${locationId}`);
+}

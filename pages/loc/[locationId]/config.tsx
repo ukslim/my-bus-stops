@@ -1,6 +1,6 @@
 "use client";
 import { NewLocation } from "@/components/new-location";
-import { loadConfig, loadRoutes, saveConfig, saveRoutes } from "@/utils/config";
+import { deleteLocation, loadConfig, loadRoutes, saveConfig, saveRoutes } from "@/utils/config";
 import { querySchema } from "@/utils/schemas";
 import { checkSyncId, generateSyncId, getSyncId, loadFromCloud, saveToCloud, setSyncId } from "@/utils/sync";
 import Link from "next/link";
@@ -20,6 +20,7 @@ const Config: React.FC = () => {
   const [syncError, setSyncError] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const [syncSuccess, setSyncSuccess] = useState<string>("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
     setCurrent(loadConfig(locationId ?? "config"));
@@ -93,6 +94,12 @@ const Config: React.FC = () => {
     setSyncId(newId);
     setSyncIdState(newId);
     setSyncSuccess("New sync ID generated! Make sure to save your changes to cloud.");
+  };
+
+  const handleDelete = () => {
+    if (!locationId) return;
+    deleteLocation(locationId);
+    router.push('/');
   };
 
   return (
@@ -180,6 +187,35 @@ const Config: React.FC = () => {
       >
         Back to {locationId}
       </Link>
+      <div className="mb-8 mt-8 p-4 bg-white rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Delete Location</h2>
+        <p className="mb-4 text-gray-600">
+          Warning: This will permanently delete this location&apos;s configuration. This action cannot be undone.
+        </p>
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors"
+          >
+            Delete Location
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              onClick={handleDelete}
+              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors"
+            >
+              Confirm Delete
+            </button>
+            <button
+              onClick={() => setShowDeleteConfirm(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
       <div className="mb-8 mt-8 p-4 bg-white rounded-lg shadow">
         <h2 className="text-xl font-bold mb-4">Sync Settings</h2>
         <p className="mb-4">Save your configuration to a cloud service to use on other devices. Your saved settings will expire in 1 day, but will stay in your browser forever.</p>
