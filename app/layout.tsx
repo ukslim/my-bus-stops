@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   title: "My Bus Stops",
   description: "Minimalist bus stop times",
   manifest: "/manifest.json",
-  themeColor: "#ffffff",
+  themeColor: "#3b82f6",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     width: "device-width",
     initialScale: 1,
     maximumScale: 1,
+    userScalable: false,
   },
 };
 
