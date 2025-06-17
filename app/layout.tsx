@@ -10,7 +10,6 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "My Bus Stops",
   description: "Minimalist bus stop times",
-  manifest: "/manifest.json",
   themeColor: "#3b82f6",
   appleWebApp: {
     capable: true,
@@ -33,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" sizes="180x180" href="/ios/180.png" />
         <link rel="apple-touch-icon" sizes="152x152" href="/ios/152.png" />
         <link rel="apple-touch-icon" sizes="120x120" href="/ios/120.png" />
