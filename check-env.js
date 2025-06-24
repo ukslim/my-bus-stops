@@ -1,1 +1,1 @@
-console.log('KV_REST_API_URL:', process.env.KV_REST_API_URL)
+console.log("KV_KV_REST_API_URL:", process.env.KV_KV_REST_API_URL);
