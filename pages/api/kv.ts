@@ -1,14 +1,20 @@
 import { createClient } from "@vercel/kv";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+const url = process.env.KV_KV_REST_API_URL;
+const token = process.env.KV_KV_REST_API_TOKEN;
+
+if (!url || !token) {
+  throw new Error(
+    "Missing KV_KV_REST_API_URL or KV_KV_REST_API_TOKEN environment variable"
+  );
+}
+
 // Initialize KV client with server-side environment variables
 const kv = createClient({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
+  url,
+  token,
 });
-
-console.log("KV_REST_API_URL:", process.env.KV_REST_API_URL);
-console.log("KV_REST_API_TOKEN:", process.env.KV_REST_API_TOKEN);
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,6 +28,12 @@ export default async function handler(
         const { syncId } = req.query;
         if (!syncId || typeof syncId !== "string") {
           return res.status(400).json({ error: "Invalid sync ID" });
+        }
+        if (syncId === "keepalive") {
+          // Perform a harmless operation to keep the DB alive
+          // A cron job will call this endpoint every day to keep the providers from deleting for inactivity
+          await kv.exists("keepalive");
+          return res.status(200).json({ ok: true });
         }
         const exists = await kv.exists(syncId);
         if (exists === 1) {

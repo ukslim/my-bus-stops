@@ -1,13 +1,8 @@
 {
     "crons": [
         {
-            "path": "/api/kv",
-            "schedule": "0 0 * * *",
-            "method": "POST",
-            "body": "{\"syncId\":\"keepalive\",\"data\":{\"ping\":\"pong\"}}",
-            "headers": {
-                "Content-Type": "application/json"
-            }
+            "path": "/api/kv?syncId=keepalive",
+            "schedule": "0 0 * * *"
         }
     ]
 }
